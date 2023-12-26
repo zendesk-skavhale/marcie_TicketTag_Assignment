@@ -12,19 +12,17 @@ import com.zendesk.marcie.service.TicketService;
 @RestController
 @RequestMapping("/api")
 public class TicketController {
-    
 
-    @Autowired
-    private TicketService ticketService;
+  @Autowired
+  private TicketService ticketService;
 
-      @GetMapping(value="/getTicketData")
-    public Root getTicketData(){
-        return ticketService.getTicketData();
-    }
+  @GetMapping(value = "/getTicketData")
+  public Root getTicketData() {
+    return ticketService.getTicketData();
+  }
 
-      @GetMapping(value="/getTicketById/{ticketId}")
-   public Root getTicketById(@PathVariable String ticketId){
-       return ticketService.getTicketById(ticketId);
-   }
+  @GetMapping(value = "/getTicketById/{ticketId}")
+  public Root getTicketById(@PathVariable int ticketId) {
+    return ticketService.getTicketById(ticketId);
+  }
 }
-
