@@ -1,12 +1,15 @@
 package com.zendesk.marcie.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+
+@Component
+@Data
 public class TagRequest {
-    
-    public ArrayList<String> tags;
-    public Date updated_stamp;
-    boolean  safe_update=true;
-}
 
+    public List<String> tags;
+
+}
