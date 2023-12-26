@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,13 +32,14 @@ public class TicketService {
     @Qualifier("apiPassword")
     private String apiPassword;
 
-    @Autowired
+    @Value("${api.base.url}")
+    private String baseUrl;
 
     public Root getTicketData() {
         HttpHeaders headers = createHeaders(apiUsername, apiPassword);
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         ResponseEntity<Root> response = restTemplate.exchange(
-                "https://z3nzendeskcodingchallenge6305.zendesk.com/api/v2/tickets/",
+                baseUrl,
                 HttpMethod.GET,
                 entity,
                 Root.class);
@@ -51,12 +53,12 @@ public class TicketService {
         }
     }
 
-    public Root getTicketById(String ticketId) {
+    public Root getTicketById(int ticketId) {
         HttpHeaders headers = createHeaders(apiUsername, apiPassword);
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         ResponseEntity<Root> response = restTemplate.exchange(
-                "https://z3nzendeskcodingchallenge6305.zendesk.com/api/v2/tickets/" + ticketId,
+                baseUrl + ticketId,
                 HttpMethod.GET, entity, Root.class);
         System.out.println(response.getBody());
 
