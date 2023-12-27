@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zendesk.marcie.entity.Root;
+import com.zendesk.marcie.exception.NoDataAvailableException;
 import com.zendesk.marcie.service.TicketService;
 
 @RestController
@@ -17,7 +18,7 @@ public class TicketController {
   private TicketService ticketService;
 
   @GetMapping(value = "/getTicketData")
-  public Root getTicketData() {
+  public Root getTicketData() throws NoDataAvailableException {
     return ticketService.getTicketData();
   }
 

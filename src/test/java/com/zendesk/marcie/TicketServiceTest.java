@@ -16,6 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.zendesk.marcie.entity.Root;
+import com.zendesk.marcie.exception.NoDataAvailableException;
 import com.zendesk.marcie.service.TicketService;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +42,7 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void testGetTicketData() {
+    public void testGetTicketData() throws NoDataAvailableException {
         // Given
         Root root = new Root();
         // set your root's fields here...

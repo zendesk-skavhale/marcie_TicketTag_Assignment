@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.zendesk.marcie.entity.Root;
+import com.zendesk.marcie.exception.NoDataAvailableException;
 
 @Service
 public class TicketService {
@@ -35,7 +36,7 @@ public class TicketService {
     @Value("${api.base.url}")
     private String baseUrl;
 
-    public Root getTicketData() {
+    public Root getTicketData() throws NoDataAvailableException {
         HttpHeaders headers = createHeaders(apiUsername, apiPassword);
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         ResponseEntity<Root> response = restTemplate.exchange(
@@ -48,8 +49,8 @@ public class TicketService {
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();// response.getBody();
         } else {
-            // Handle non-200 status codes appropriately
-            return null;
+            throw new NoDataAvailableException("Data not available for the specified ticket id");
+
         }
     }
 

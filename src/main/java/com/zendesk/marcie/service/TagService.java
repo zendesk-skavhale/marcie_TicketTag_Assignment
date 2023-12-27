@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zendesk.marcie.entity.TagRequest;
 import com.zendesk.marcie.entity.TagResponse;
 import com.zendesk.marcie.entity.Ticket;
+import com.zendesk.marcie.exception.CustomException;
 
 @Service
 public class TagService {
@@ -62,6 +63,10 @@ public class TagService {
                 HttpMethod.PUT,
                 requestEntity,
                 TagResponse.class);
+
+        if (responseEntity == null || responseEntity.getBody() == null) {
+            throw new CustomException("Failed to create tag in ticket.");
+        }
 
         return responseEntity.getBody();
     }
