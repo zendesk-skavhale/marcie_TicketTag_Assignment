@@ -23,7 +23,7 @@ public class TicketController {
   }
 
   @GetMapping(value = "/getTicketById/{ticketId}")
-  public Root getTicketById(@PathVariable int ticketId) {
+  public Root getTicketById(@PathVariable int ticketId) throws NoDataAvailableException {
     return ticketService.getTicketById(ticketId);
   }
 }
