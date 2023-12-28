@@ -19,4 +19,3 @@ public class Ticket {
     public List<String> tags;
 
 }
-
