@@ -11,6 +11,7 @@ import com.zendesk.marcie.entity.Root;
 import com.zendesk.marcie.entity.TagRequest;
 import com.zendesk.marcie.entity.TagResponse;
 import com.zendesk.marcie.entity.Ticket;
+import com.zendesk.marcie.exception.NoDataAvailableException;
 import com.zendesk.marcie.service.TagService;
 import com.zendesk.marcie.service.TicketService;
 
@@ -28,14 +29,11 @@ public class TicketManager {
     @Autowired
     private TagRequest tagRequest;
 
-    private List<Ticket> ticketList;
-
     public TicketManager() {
-        this.ticketList = new ArrayList<>();
         this.scanner = new Scanner(System.in);
     }
 
-    public void start() {
+    public void start() throws NoDataAvailableException {
         while (true) {
             showMenu();
             System.out.print("Enter Option : ");
@@ -44,16 +42,14 @@ public class TicketManager {
         }
     }
 
-    private void handleChoice(int choice) {
+    private void handleChoice(int choice) throws NoDataAvailableException {
 
         switch (choice) {
             case 1:
                 String leftAlignFormat = getLeftAlignFormat();
                 try {
-                    // Root root = tagService.getTicketData();
-                    // System.out.println("Ticket List:" +root);
+
                     Root obj = ticketService.getTicketData();
-                    // System.out.println(obj);
                     obj.ticketList.stream().forEach(ticket -> {
                         System.out.format(leftAlignFormat, ticket.getId(), ticket.getCreated_at(),
                                 ticket.getUpdated_at(), ticket.getTags());
@@ -63,7 +59,6 @@ public class TicketManager {
                     e.printStackTrace();
                 }
                 System.out.println("\n\n\n");
-                // showMenu();
                 break;
 
             case 2:
@@ -96,21 +91,31 @@ public class TicketManager {
             case 3:
                 System.out.println("Enter ticket no in which you want to delete Tag");
                 int ticket_no = scanner.nextInt();
-                System.out.println("Enter tag to delete : ");
+                System.out.println("Enter tag to delete : \n");
                 String tag = scanner.next();
-                Ticket ticket = new Ticket();
+                // Retrieve the actual Ticket from the database using the ticket number.
+                // You need to implement this method according to your application specifics.
+                Root rootObject = ticketService.getTicketById(ticket_no);
+                Ticket ticket = rootObject.getTicket();
+                if (ticket == null) {
+                    System.out.println("Ticket " + ticket_no + " does not exist.");
+                    break;
+                }
+                // Check if the tag to delete is in the Ticket's tags.
+                if (ticket.getTags() == null || !ticket.getTags().contains(tag)) {
+                    System.out.println("\n Tag '" + tag + "' not found in Ticket " + ticket_no);
+                    break;
+                }
+                // The tag is in the Ticket's tags. It's safe to delete now.
                 List<String> list = new ArrayList<>();
                 list.add(tag);
-
                 ticket.setTags(list);
 
                 tagService.deleteTagsFromTicket(ticket, ticket_no);
-                System.out.format(getDelAlignFormat(), ticket_no,
-                        ticket.getTags());
+                System.out.format(getDelAlignFormat(), ticket_no, ticket.getTags());
                 System.out.println();
 
                 break;
-
             case 4:
 
                 System.out.println("\nClosing application...");
@@ -145,7 +150,6 @@ public class TicketManager {
                 "| Ticket_No         | Created at                    |  Updated_at       |   Tags                                                       |%n");
         System.out.format(
                 "+------------+--------------------------------+------------+------------+--------------------------------------------------------------+%n");
-        // System.out.format(leftAlignFormat, "1", "Show All Ticket","","","");
         return leftAlignFormat;
     }
 
