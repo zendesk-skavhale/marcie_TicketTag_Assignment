@@ -5,7 +5,6 @@ import java.util.Base64;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.zendesk.marcie.entity.Root;
@@ -26,14 +26,12 @@ public class TicketService {
     private RestTemplate restTemplate;
 
     @Autowired
-    @Qualifier("apiUsername")
     private String apiUsername;
 
     @Autowired
-    @Qualifier("apiPassword")
     private String apiPassword;
 
-    @Value("${api.base.url}")
+    @Value("${zendesk.subdomain}")
     private String baseUrl;
 
     public Root getTicketData() throws NoDataAvailableException {
@@ -45,25 +43,33 @@ public class TicketService {
                 entity,
                 Root.class);
 
-        // Check the response status and body etc here...
         if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();// response.getBody();
+            return response.getBody();
         } else {
             throw new NoDataAvailableException("Data not available for the specified ticket id");
 
         }
     }
 
-    public Root getTicketById(int ticketId) {
-        HttpHeaders headers = createHeaders(apiUsername, apiPassword);
+    public Root getTicketById(int ticketId) throws NoDataAvailableException {
+        try {
+            HttpHeaders headers = createHeaders(apiUsername, apiPassword);
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<Root> response = restTemplate.exchange(
-                baseUrl + ticketId,
-                HttpMethod.GET, entity, Root.class);
-        System.out.println(response.getBody());
+            HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+            ResponseEntity<Root> response = restTemplate.exchange(
+                    baseUrl + ticketId,
+                    HttpMethod.GET,
+                    entity,
+                    Root.class);
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new NoDataAvailableException("Data not available for the specified ticket id");
+            }
 
-        return response.getBody();
+            return response.getBody();
+        } catch (RestClientException ex) {
+            throw new NoDataAvailableException("Error occured during the exchange.", ex);
+
+        }
     }
 
     public HttpHeaders createHeaders(String username, String password) {

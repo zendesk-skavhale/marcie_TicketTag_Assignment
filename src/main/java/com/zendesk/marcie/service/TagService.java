@@ -3,7 +3,6 @@ package com.zendesk.marcie.service;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -29,17 +28,12 @@ public class TagService {
     private RestTemplate restTemplate;
 
     @Autowired
-    @Qualifier("apiUsername")
     private String apiUsername;
 
     @Autowired
-    @Qualifier("apiPassword")
     private String apiPassword;
 
-    @Autowired
-    private TicketService ticketService;
-
-    @Value("${api.base.url}")
+    @Value("${zendesk.subdomain}")
     private String baseUrl;
 
     @Autowired
@@ -82,7 +76,7 @@ public class TagService {
                 requestEntity,
                 TagResponse.class);
         System.out.println("deletion operation : " + responseEntity.getBody());
-        // }
+        
         return responseEntity.getBody();
     }
 
