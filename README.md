@@ -1,15 +1,17 @@
 # Zendesk assignment (marcie-ticket-service)
-This is a microservice application providing functionalities to list tickets, add tag in ticket, Remove tag from ticket.
+This is a application providing functionalities to list tickets, add tag in ticket, Remove tag from ticket.
 
 
 ## Features
 - List Tickets: Fetches all the available tickets from Zendesk.
-- dd Tag to Ticket: Allows adding a tag to a specific ticket.
--Delete/Remove tag from specific ticket: Allows deleting a tag from specific ticket.
+- Add Tag to Ticket: Allows adding a tag to a specific ticket.
+- Delete/Remove tag from specific ticket: Allows deleting a tag from specific ticket.
 
 
 ## Prerequisite
-The microservice uses the Zendesk API for its functionalities. In order to run this microservice, you need to have access to the Zendesk API.
+The application uses the Zendesk API for its functionalities. In order to run this application, you need to have access to the Zendesk API.
+- you should have mvn installed
+- you should have java 17 version installed
 
 
 
@@ -38,6 +40,9 @@ run maven project
 - mvn compile
 - mvn clean package
 - mvn clean install
+
+- mvn spring-boot:run
+
 Then you are good to run project.
 
 Endpoints
