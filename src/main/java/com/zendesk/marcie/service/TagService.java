@@ -34,7 +34,7 @@ public class TagService {
     private String apiPassword;
 
     @Value("${zendesk.subdomain}")
-    private String baseUrl;
+    private String subdomain;
 
     @Autowired
     public TagService(RestTemplate restTemplate, ObjectMapper objectMapper) {
@@ -48,7 +48,7 @@ public class TagService {
 
     public TagResponse createTagInTicket(TagRequest tagRequest, int ticket_id) {
 
-        String url = baseUrl + ticket_id + "/tags";
+        String url = "https://" + subdomain + ".zendesk.com/api/v2/tickets/" +ticket_id + "/tags";
 
         HttpHeaders headers = createHeaders(apiUsername, apiPassword);
         HttpEntity<TagRequest> requestEntity = new HttpEntity<>(tagRequest, headers);
@@ -71,7 +71,7 @@ public class TagService {
 
         HttpEntity<Ticket> requestEntity = new HttpEntity<>(ticket, headers);
         ResponseEntity<TagResponse> responseEntity = restTemplate.exchange(
-                baseUrl + ticketId + "/tags",
+                "https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId + "/tags",
                 HttpMethod.DELETE,
                 requestEntity,
                 TagResponse.class);

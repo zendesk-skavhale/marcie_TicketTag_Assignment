@@ -32,13 +32,13 @@ public class TicketService {
     private String apiPassword;
 
     @Value("${zendesk.subdomain}")
-    private String baseUrl;
+    private String subdomain;
 
     public Root getTicketData() throws NoDataAvailableException {
         HttpHeaders headers = createHeaders(apiUsername, apiPassword);
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
         ResponseEntity<Root> response = restTemplate.exchange(
-                baseUrl,
+            "https://" + subdomain + ".zendesk.com/api/v2/tickets/",
                 HttpMethod.GET,
                 entity,
                 Root.class);
@@ -57,7 +57,7 @@ public class TicketService {
 
             HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
             ResponseEntity<Root> response = restTemplate.exchange(
-                    baseUrl + ticketId,
+                "https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId,
                     HttpMethod.GET,
                     entity,
                     Root.class);
