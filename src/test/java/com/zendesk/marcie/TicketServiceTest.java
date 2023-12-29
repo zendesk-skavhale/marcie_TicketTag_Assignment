@@ -33,7 +33,7 @@ public class TicketServiceTest {
     private TicketService ticketService;
 
     @Value("${zendesk.subdomain}")
-    private String baseUrl;
+    private String subdomain;
 
     @Value("${api.username}")
     private String username;
@@ -43,7 +43,7 @@ public class TicketServiceTest {
 
     @BeforeEach
     public void setup() {
-        ReflectionTestUtils.setField(ticketService, "baseUrl",
+        ReflectionTestUtils.setField(ticketService, "subdomain",
                 "");
     }
 

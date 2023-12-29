@@ -40,7 +40,7 @@ public class TagServiceTest {
     private ArgumentCaptor<HttpEntity<TagRequest>> requestEntityCaptor;
 
     @Value("${zendesk.subdomain}")
-    private String baseUrl;
+    private String subdomain;
 
     @Value("${api.username}")
     private String username;
@@ -50,7 +50,7 @@ public class TagServiceTest {
 
     @BeforeEach
     public void setup() {
-        ReflectionTestUtils.setField(tagService, "baseUrl", "");
+        ReflectionTestUtils.setField(tagService, "subdomain", "");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class TagServiceTest {
         HttpEntity<TagRequest> requestEntity = new HttpEntity<>(tagRequest, headers);
 
         when(restTemplate.exchange(
-                eq(baseUrl + ticketId + "/tags"),
+                eq("https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId + "/tags"),
                 eq(HttpMethod.PUT),
                 eq(requestEntity),
                 eq(TagResponse.class))).thenReturn(new ResponseEntity<>(tagResponse, HttpStatus.BAD_REQUEST));
@@ -126,7 +126,7 @@ public class TagServiceTest {
         HttpEntity<Ticket> requestEntity = new HttpEntity<>(ticket, headers);
 
         when(restTemplate.exchange(
-                eq(baseUrl + ticketId + "/tags"),
+                eq("https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId + "/tags"),
                 eq(HttpMethod.DELETE),
                 eq(requestEntity),
                 eq(TagResponse.class))).thenReturn(new ResponseEntity<>(tagResponse, HttpStatus.BAD_REQUEST));
