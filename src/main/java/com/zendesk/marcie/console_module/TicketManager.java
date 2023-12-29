@@ -93,20 +93,17 @@ public class TicketManager {
                 int ticket_no = scanner.nextInt();
                 System.out.println("Enter tag to delete : \n");
                 String tag = scanner.next();
-                // Retrieve the actual Ticket from the database using the ticket number.
-                // You need to implement this method according to your application specifics.
+
                 Root rootObject = ticketService.getTicketById(ticket_no);
                 Ticket ticket = rootObject.getTicket();
                 if (ticket == null) {
                     System.out.println("Ticket " + ticket_no + " does not exist.");
                     break;
                 }
-                // Check if the tag to delete is in the Ticket's tags.
                 if (ticket.getTags() == null || !ticket.getTags().contains(tag)) {
                     System.out.println("\n Tag '" + tag + "' not found in Ticket " + ticket_no);
                     break;
                 }
-                // The tag is in the Ticket's tags. It's safe to delete now.
                 List<String> list = new ArrayList<>();
                 list.add(tag);
                 ticket.setTags(list);
@@ -160,8 +157,8 @@ public class TicketManager {
         System.out.format("| Option     | Description                    |%n");
         System.out.format("+------------+--------------------------------+%n");
         System.out.format(leftAlignFormat, "1", "Show All Ticket");
-        System.out.format(leftAlignFormat, "2", "Add Ticket");
-        System.out.format(leftAlignFormat, "3", "Delete Ticket");
+        System.out.format(leftAlignFormat, "2", "Add Ticket Tag");
+        System.out.format(leftAlignFormat, "3", "Delete Ticket Tag");
         System.out.format(leftAlignFormat, "4", "Exit");
         System.out.format("+------------+--------------------------------+%n");
         ;
